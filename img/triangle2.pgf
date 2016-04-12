@@ -1,0 +1,44 @@
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{backgrounds}
+%
+\newcommand{\samples}{100}
+%
+\providecommand{\x}{\vec{x}}
+\providecommand{\cj}{\vec{c}_j}
+\newcommand{\dstxxx}{4.1231}
+%
+\begin{tikzpicture}[->,>=stealth',x=1.5cm, y=1.5cm, scale=1.3, transform shape]%,background rectangle/.style={fill=white}, show background rectangle]
+\tikzset{dot/.style={circle,fill=#1,inner sep=0,minimum size=3pt}}
+
+% centroids - that one that is moving
+\coordinate (x) at (0,0);
+\coordinate (cj) at (4,1);
+\coordinate (move) at (0,-2);
+
+\begin{scope}[]
+\clip (0,1.5) rectangle (6.5,-1.5);
+\draw[fill=black!10!white] (x) circle (\dstxxx+2);
+\draw[fill=white] (x) circle (\dstxxx-2);
+\end{scope}
+
+\node[dot=black] at (x) {};
+\node at (x) [above] {$\vec{x}$};
+\node[dot=black] at (cj) {};
+\node at (cj) [above] {$\vec{c}_j$};
+
+\node[dot=black,rotate around={-20:(cj)}] at ($(cj)+(move)$) {};
+\node[,rotate around={-20:(cj)},rotate=20] at ($(cj)+(move)$) [below] {$\cj'$};
+
+\begin{scope}[rotate around={-10:(x)}]
+\draw[dashed,<->] (x) -- +(\dstxxx-2,0);
+\node at ($(x)+(\dstxxx/2-1,0)$) [below] {$\|\x-\cj\|-\|\cj-\cj'\|$};
+\end{scope}
+
+\begin{scope}[rotate around={10:(x)}]
+\draw[dashed,<->] (x) -- +(\dstxxx+2,0);
+\node at ($(x)+(\dstxxx/2+1,0)$) [below] {$\|\x-\cj\|+\|\cj-\cj'\|$};
+\end{scope}
+
+\end{tikzpicture}

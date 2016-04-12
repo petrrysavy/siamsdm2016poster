@@ -8,17 +8,73 @@
 \usecolorstyle[colorPalette=GreenGrayViolet,colorOne=green!50!black,colorTwo=white,colorThree=black]{Denmark}
 \colorlet{titlefgcolor}{black}
 
+\usepackage{files/mycommands}
+
 \begin{document}
 \maketitle
-\begin{columns} \column{0.55}
-\block{Creating the document}{The document...} \note[targetoffsetx=-.05\textwidth,targetoffsety=9.5cm,innersep=.4cm,angle=-45,connection]{...}
+\begin{columns}
+\column{0.30}
+\block{$k$-means problem}{
+  Input
+  \begin{itemize}
+    \item A set of points $\left\{ \itemization{\vec{x}}{n} \right\}$.
+    \item Number of centroids $k$.
+  \end{itemize}
+  Goal is to find to find a set of $k$ points $\left\{ \itemization{\vec{c}}{k} \right\}$, named \emph{centroids},
+  that minimize the \emph{distortion function}
+  \begin{equation*}
+    J(\itemization{\vec{c}}{k}, \vec{c}) = \sumion \left\| \vec{x}_i - \vec{c}(\vec{x}_i) \right\|^2.
+    \label{eq:distortion}
+  \end{equation*}
+  (function $\vec{c}$ returns the assigned centroid to the given argument)
+  \input{files/clusters}
+}
+
+\block{Lloyd's algorithm}{
+  Iteratively repeats two steps:
+     \begin{enumerate}
+       \item Assign each point to its closest centroid
+       \item Move centroids to the cluster means
+     \end{enumerate}
+}
+
+\block{Triangle-inequality-based $k$-means}{
+  \begin{itemize}
+    \item Lloyd's algorithm does many redundant distance calculations
+    \item Solution is a set of upper and lower bounds.
+  \end{itemize}
+  \begin{theorem}[Triangle inequality] \label{thm:triange}
+    For any vectors $\vec{x}$ and $\vec{y}$ holds
+    \begin{equation*}
+       \| \vec{x} + \vec{y} \| \leq \|\vec{x}\| + \|\vec{y}\|.
+    \end{equation*}
+ \end{theorem}
+ \begin{center}
+ \tiny
+  \input{img/triangle1.pgf}
+  \input{img/triangle2.pgf}
+ \end{center}
+}
+
 \block{The title matter}{The title...}
+
 \block{Blocks}{Blocks are...} \note[targetoffsetx=24cm, targetoffsety=-9cm,rotate=1,angle=270,radius=8cm,width=.75\textwidth,innersep=.4cm]{You
 can...}
-\column{0.45} \block{Columns}{By default,...}
-\begin{subcolumns} \subcolumn{.45} \block{Subcolumns}{If you...} \subcolumn{.5} \block{}{An example...} \end{subcolumns}
+
+\column{0.45}
+\block{Columns}{By default,...}
+
+\begin{subcolumns} 
+\subcolumn{.45}
+\block{Subcolumns}{If you...}
+\subcolumn{.5}
+\block{}{An example...}
+\end{subcolumns}
+
 \block[titlewidthscale=.8,bodywidthscale=.9,titleoffsety=9.5mm,bodyoffsety=9mm]{Changing the Poster's Appearance}{If the default...}
+
 \end{columns}
+
 \block[titleoffsety=-1cm,bodyoffsety=-1cm]{Sample document}{This poster...}
 
 \end{document}

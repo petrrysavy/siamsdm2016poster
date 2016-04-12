@@ -1,0 +1,32 @@
+%\begin{figure}[ht]
+%\centering%
+\begin{center}
+\begin{tikzpicture}
+	\begin{axis}[ 
+		%xlabel=Product $|L| \cdot |E|$,
+		%axis y label/.style={at={(current axis.left)}},
+		%ylabel=Time required for run of the greedy part in $\mathrm{ms}$,
+		cycle list name=color list,
+		width=0.15\textwidth,
+		only marks,
+		yticklabels={,,},
+		xticklabels={,,},
+		%height=7cm,
+		%legend pos= south east,
+		%legend cell align=left,
+		%xmin=0,
+		%ymin=0,
+		%ymode=log,
+		%log ticks with fixed point,
+		] 
+		\addplot table[scatter,x=x,y=y] {files/cluster1.dat};%
+		\addplot table[scatter,x=x,y=y] {files/cluster2.dat};%
+		\addplot[color=green!50!black] table[scatter,x=x,y=y] {files/cluster3.dat};%
+		\addplot[color=black, mark=x, mark size=7, line width=3pt] table[scatter,x=x,y=y] {files/centroids.dat};
+		%\legend{Tourist trails data,Tram lines data};%
+	\end{axis}
+\end{tikzpicture}
+\end{center}
+%\caption[An illustration of the $k$-means problem.]{An illustration of the $k$-means problem.}
+%\label{plot:clusters}
+%\end{figure}

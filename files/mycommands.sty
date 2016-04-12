@@ -1,0 +1,66 @@
+\RequirePackage{pifont}
+\RequirePackage{xcolor}
+
+\providecommand{\yesnoyescolor}{green}
+\providecommand{\yesnonocolor}{red}
+
+\newcommand{\itemization}[2]{{#1}_1, {#1}_2, \ldots, {#1}_{#2}}
+
+\newcommand{\sumion}{\sum_{i=1}^n}
+\providecommand{\Oh}{\mathop{\mathcal{O}}}
+\newcommand{\Rpz}{\mathbb{R}^+_0}
+\newcommand{\R}{\mathbb{R}}
+
+\AtEndPreamble{
+    \newcommand{\yes}{{\color{\yesnoyescolor} \checkmark}}
+    \newcommand{\no}{{\color{\yesnonocolor} \ding{55}}}
+}
+
+% amsmath etc
+\RequirePackage{amsmath}
+\RequirePackage{amsthm}
+\newtheorem{theorem}{Theorem}
+
+% common vectors
+\newcommand{\x}{\vec{x}}
+\newcommand{\xxi}{\vec{x}_i}
+\newcommand{\xj}{\vec{x}_j}
+\newcommand{\lx}{l(\x)}
+\newcommand{\cj}{\vec{c}_j}
+\newcommand{\ci}{\vec{c}_i}
+\newcommand{\cc}{\vec{c}_c}
+\newcommand{\ck}{\vec{c}_k}
+\newcommand{\cx}{\vec{c}(\x)}
+\newcommand{\ux}{u(\x)}
+\newcommand{\sci}{s(\ci)}
+\newcommand{\scx}{s(\cx)}
+\newcommand{\lxcj}{l(\x, \cj)}
+\newcommand{\lxcjp}{l(\x, \cj')}
+\newcommand{\movci}{\| \ci - \ci' \|}
+\newcommand{\movcj}{\| \cj - \cj' \|}
+\newcommand{\distxcj}{\| \x - \cj \|}
+\newcommand{\distxcjp}{\| \x - \cj' \|}
+\newcommand{\distxci}{\| \x - \ci \|}
+\newcommand{\deltaxcj}{\delta(\x, \cj)}
+\newcommand{\lux}{lu(\x)}
+\newcommand{\mci}{m(\ci)}
+\newcommand{\mcj}{m(\cj)}
+\newcommand{\cix}{\mathsf{c}_{ix}}
+\newcommand{\ciy}{\mathsf{c}_{iy}}
+
+\renewcommand{\yesnoyescolor}{green!50!black}
+
+% PGFPlots
+\RequirePackage{pgf}
+\RequirePackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{backgrounds}
+\RequirePackage{pgfplotstable}
+\newcommand{\plotwidth}{\textwidth}
+\newcommand{\plotheight}{0.6\textwidth}
+\newcommand{\strongplot}[1]{\color{gray}{#1}}
+
+
+\endinput
