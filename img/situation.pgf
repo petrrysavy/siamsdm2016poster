@@ -9,7 +9,7 @@
 \providecommand{\ci}{\vec{c}_i}
 
 
-\begin{tikzpicture}[x=1in, y=1in, scale=2.0, line width=1pt]
+\begin{tikzpicture}[x=1in, y=1in, scale=2.5, line width=1pt]
 
 % centroids - that one that is moving
 \coordinate (c) at (0,1);

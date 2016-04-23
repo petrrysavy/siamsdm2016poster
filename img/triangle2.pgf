@@ -9,7 +9,7 @@
 \providecommand{\cj}{\vec{c}_j}
 \newcommand{\dstxxx}{4.1231}
 %
-\begin{tikzpicture}[->,>=stealth',x=1.5cm, y=1.5cm, scale=1.3, transform shape]%,background rectangle/.style={fill=white}, show background rectangle]
+\begin{tikzpicture}[->,>=stealth',x=1.5cm, y=1.5cm, scale=1.1, transform shape]%,background rectangle/.style={fill=white}, show background rectangle]
 \tikzset{dot/.style={circle,fill=#1,inner sep=0,minimum size=3pt}}
 
 % centroids - that one that is moving
