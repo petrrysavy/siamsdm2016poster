@@ -13,7 +13,17 @@
 \begin{document}
 \maketitle
 \begin{columns}
-\column{0.30}
+\column{0.2}
+
+\block[titleoffsety=-100cm,bodyoffsety=-100cm]{}{
+Petr Ry\v{s}av\'{y} and Greg Hamerly \\
+Department of Computer Science\\
+Baylor University\\
+Waco, TX 76798-7356 \\
+\href{mailto:petr_rysavy@alumni.baylor.edu }{petr\_rysavy@alumni.baylor.edu } \\
+\href{mailto:greg_hamerly@baylor.edu}{greg\_hamerly@baylor.edu}
+}
+
 \block{$k$-means problem}{
   Input
   \begin{itemize}
@@ -38,6 +48,9 @@
      \end{enumerate}
 }
 
+
+\column{0.30}
+
 \block{Triangle-inequality-based $k$-means}{
   \begin{itemize}
     \item Lloyd's algorithm does many redundant distance calculations
@@ -56,25 +69,122 @@
  \end{center}
 }
 
-\block{The title matter}{The title...}
+\block{Elkan's algorithm}{
+  \begin{itemize}
+    \item One \emph{upper bound} $\ux$ on the distance to the closest centroid.
+    \item $k$ \emph{lower bounds} $\lxcj$ on the distances between the
+      point $\x$ and each centroid.
+  \end{itemize}
+  \begin{center}
+    \input{img/elkanbounds.pgf}
+  \end{center}
+}
 
-\block{Blocks}{Blocks are...} \note[targetoffsetx=24cm, targetoffsety=-9cm,rotate=1,angle=270,radius=8cm,width=.75\textwidth,innersep=.4cm]{You
-can...}
+\block{Hamerly's algorithm}{
+  \begin{itemize}
+    \item One \emph{upper bound} $u(\vec{x})$.
+    \item One \emph{lower bound} $l(\vec{x})$ that stands for a lower bound on the distance
+      between the point $\vec{x}$ and its second closest centroid.
+  \end{itemize}
+  \begin{center}
+    \input{img/hamerlybounds.pgf}
+  \end{center}
+}
 
-\column{0.45}
-\block{Columns}{By default,...}
+\column{0.25}
 
-\begin{subcolumns} 
-\subcolumn{.45}
-\block{Subcolumns}{If you...}
-\subcolumn{.5}
-\block{}{An example...}
-\end{subcolumns}
+\block{Tighter update}{
+  \begin{itemize}
+    \item We assume the worst case while we update the upper/lower bounds.
+    \item Points in cluster are not everywhere in space.
+    \item Points in cluster fulfill some locality.
+    \item When a centroid move away, the lower bound does not have to shrink.
+  \end{itemize}
+  
+  \begin{itemize}
+    \item We use the upper bound.
+    \item Any point is in distance $\ux$ from its closest centroid.
+    \item Therefore each point is at most
+      \begin{equation*}
+         \mci = \max_{\vec{y} \mid \vec{c}(\vec{y}) = \ci} u(\vec{y}).
+      \end{equation*}
+      from its closest centroid $\ci$.
+  \end{itemize}
+  
+    \begin{itemize}
+     \item The update $\deltaxcj$ of $\lxcj$ must fulfill
+       \begin{equation*}
+         \deltaxcj \geq \distxcj - \distxcjp
+       \end{equation*}
+     \item The update is at least the difference between the old and new distance.
+     \item Denote $\distxcj - \distxcjp = f(\x)$.
+  \end{itemize}
+}
 
-\block[titlewidthscale=.8,bodywidthscale=.9,titleoffsety=9.5mm,bodyoffsety=9mm]{Changing the Poster's Appearance}{If the default...}
+\block{Lower bound update calculation}{
+If we fix $f(x) = \distxcj - \distxcjp = z$, we obtain a hyperbola. For any point on or above the hyperbola we can use $\deltaxcj = z$ as the update of the lower bound $\lxcj$.
+
+\begin{lemma}
+Suppose that $\x \in \R^2$, $\ux \leq r \in \Rpz$ and $\ci = (c_{ix}, c_{iy})$,
+where $c_{ix} > r$ and $c_{iy} \leq r$. Let $\cj=(0,1)$ and $\cj'=(0,-1)$. Then
+\begin{equation*}
+    \deltaxcj =
+        2\frac{
+            c_{ix} r
+            -
+            c_{iy} \sqrt{\| \ci \|^2 - r^2}
+        }{
+             \| \ci \|^2
+        }
+\end{equation*}
+is a valid update of the lower bound $\lxcj$.
+\end{lemma}
+  \begin{center}
+    \input{img/situation.pgf}
+  \end{center}
+}
+
+\column{0.25}
+\block{Avoiding $\Theta(n)$ work in the innermost loop}{
+  \begin{itemize}
+    \item In Hamerly's algorithm we need to know the distance to the second closest neighbor in the innermost loop.
+    \item What if we knew what was the second closest centroid?
+  \end{itemize}
+  \begin{definition}
+    The \emph{neighbor} of a centroid $\ci$ is any centroid $\cj$
+    that is closest or second closest to any point assigned to $\ci$.
+  \end{definition}
+  \begin{theorem}
+    Any neighbor $\cj$ of a centroid $\ci$ must fulfill the condition
+    \begin{equation}
+      m(\ci) + s(\ci) \geq \frac{1}{2} \| \ci - \cj \|.
+    \end{equation}
+  \end{theorem}
+  $\sci$ is the distance from $\ci$ to closest other centroid, i.e.
+  \begin{equation}
+    \sci = \frac{1}{2} \min_{j \in \{1,2, \ldots, i-1, i+1, \ldots, k\}} \| \cj - \ci \|.
+  \end{equation}
+  \begin{itemize}
+    \item If the condition is violated, we know that for $\x$ assigned to $\ci$:
+    \begin{itemize}
+      \item $\ci$ is closer to $\x$ than $\cj$ and
+      \item the closest other centroid to $\ci$ is closer to $\x$ than $\cj$.
+    \end{itemize}
+  \end{itemize}
+}
+
+\block{Experimental results}{
+  \begin{itemize}
+    \item Sources: \url{https://github.com/petrrysavy/baylorml} (based on code by G. Hamerly and J. Drake)
+    \item Synthetic and real-world datasets
+    \item Changes require operations per iteration and pair of centroids.
+    \item Low risk of slowing down the algorithm while good chances of improving the runtime.
+    \item Changes work better in lower dimension and when data are clustered.
+    \item The algorithms do not spend the most of their time by distance calculations.
+    \item Algorithms becomes up to 8 times faster that the original versions.
+  \end{itemize}
+}
 
 \end{columns}
-
-\block[titleoffsety=-1cm,bodyoffsety=-1cm]{Sample document}{This poster...}
 
 \end{document}

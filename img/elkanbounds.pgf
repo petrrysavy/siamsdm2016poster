@@ -1,0 +1,53 @@
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.pathreplacing}
+%\usetikzlibrary{backgrounds}
+%
+\begin{tikzpicture}[->,>=stealth',x=1.5cm, y=1.5cm, scale=2.0]%, transform shape]%,background rectangle/.style={fill=white}, show background rectangle]
+\tikzset{dot/.style={circle,fill=#1,inner sep=0,minimum size=3pt}}
+
+% centroids - that one that is moving
+\coordinate (x) at (0,0);
+\coordinate (c1) at (-0.5,0.5);
+\coordinate (c2) at (3,1);
+\coordinate (c3) at (5.3,-1);
+
+\coordinate (cx) at (-0.5,0.5);
+\coordinate (cj) at (3.3,1);
+
+\begin{scope}[]
+\clip (-1.2,1.5) rectangle (6,-1.2);
+
+\draw[fill=black!20!white] (x) circle (10);
+\draw[fill=black!10!white] (x) circle (5);
+\draw[fill=white] (x) circle (3);
+
+\draw[fill=black!10!white] (x) circle (1);
+
+%\draw[fill=black!10!white] (x) circle (5.4142);
+%\draw[fill=white] (x) circle (2.5858);
+\end{scope}
+
+\node[dot=black] at (x) {};
+\node at (x) [above] {$\vec{x}$};
+\node[dot=black] at (cx) {};
+\node at (c1) [above right] {$\vec{c}_1$};
+\node[dot=black] at (c2) {};
+\node at (c2) [above] {$\vec{c}_2$};
+\node[dot=black] at (c3) {};
+\node at (c3) [above] {$\vec{c}_3$};
+
+\draw[dashed,<->] (x) -- +(-1,0);
+\node at (-0.5,0) [below] {$u(\vec{x})$};
+
+\begin{scope}[rotate around={-10:(x)}]
+\draw[dashed,<->] (x) -- +(3,0);
+\node at ($(x)+(1.5,0)$) [below] {$l(\vec{x},\vec{c}_2)$};
+\end{scope}
+
+\begin{scope}[rotate around={10:(x)}]
+\draw[dashed,<->] (x) -- +(5,0);
+\node at ($(x)+(2.51,0)$) [below] {$l(\vec{x},\vec{c}_3)$};
+\end{scope}
+
+\end{tikzpicture}

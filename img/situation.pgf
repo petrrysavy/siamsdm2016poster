@@ -1,0 +1,63 @@
+\usetikzlibrary{calc}
+\usetikzlibrary{arrows}
+\usetikzlibrary{decorations.pathreplacing}
+
+\newcommand{\samples}{100}
+
+\providecommand{\x}{\vec{x}}
+\providecommand{\cj}{\vec{c}_j}
+\providecommand{\ci}{\vec{c}_i}
+
+
+\begin{tikzpicture}[x=1in, y=1in, scale=2.0, line width=1pt]
+
+% centroids - that one that is moving
+\coordinate (c) at (0,1);
+\coordinate (c') at (0,-1);
+\tikzset{dot/.style={circle,fill=#1,inner sep=0,minimum size=5pt}}
+\node[dot=black] at (c) {};
+\node at (c) [above right] {$\cj$};
+\node[dot=black] at (c') {};
+\node at (c') [below right] {$\cj'$};
+
+% draw the hyperbola
+\begin{scope}[]
+\clip (-1,-1.25) rectangle (1,1.25);
+\draw[] plot[variable=\t,samples=\samples,domain=-64:64] ({0.7071*tan(\t)},{-0.7071*sec(\t)});
+\end{scope}
+
+% draw axis
+\draw (-1,0) -- (2,0);
+\draw (0,-1.2) -- (0,1.2);
+
+% draw the asymptote
+\draw[dashed] (0,0) -- (1.2,-1.2);
+% draw the s vector
+\coordinate (s) at (0.9,-0.9);
+\draw[thick,->,line width=2pt] (0,0) -> (s);
+\node[dot=black] at (s) {};
+\node at (s) [above=5pt] {$\vec{s}$};
+
+% the center ci
+\coordinate (ci) at (0.5,0.5);
+\node[dot=black] at ($(s)+(ci)$) {};
+\node at ($(s)+(ci)$) [below right] {$\ci$};
+% the circle
+\draw ($(s)+(ci)$) circle (0.7071);
+
+% the radius
+\draw[color=gray, dashed] ($(s)+(ci)$) -- (s);
+\node[color=gray] at ($(s)+0.5*(ci)$) [above left] {$r$};
+
+% axis of hyperbola
+%\draw[color=gray,decorate, decoration={brace, amplitude=4pt}] (0,-0.7071) -- (0,0);
+%\node at ($0.35*(c')$) [left = 4pt] {$a$};
+%\draw[color=gray, dashed] ($0.5*(c')$) -- +(0.5,0);
+%\node[color=gray] at ($0.5*(c')+(0.25,0)$) [above] {$b$};
+
+% point x
+\coordinate (x) at (1,-0.1);
+\node[dot=gray] at (x) {};
+\node[color=gray] at (x) [below] {$\x$};
+
+\end{tikzpicture}
