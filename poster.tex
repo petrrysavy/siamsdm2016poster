@@ -60,8 +60,11 @@ Waco, TX 76798-7356 \\
    Lloyd's algorithm does many redundant distance calculations.
    If a centroid does not move or the movement is small, the
    distances are recalculated. There are several algorithms that
-   target this issue by maintaining a set of upper and lower bounds.
-   Those bounds are based on the triangle inequality.   
+   target this inefficiency by maintaining a set of upper and lower bounds.
+   Those bounds are guaranteed by the triangle inequality.
+   Common property of those algorithms is that they produce
+   \emph{exactly} the same result as Lloyd's algorithm,
+   only \emph{faster}.
    
   \begin{theorem}[Triangle inequality] \label{thm:triange}
     For any vectors $\vec{x}$ and $\vec{y}$ holds
@@ -103,8 +106,9 @@ Waco, TX 76798-7356 \\
 \block{Tighter update}{
     We assume the worst case while we update the upper/lower bounds.
     Points in cluster are not everywhere in space, but
-    they fulfill some locality. When a centroid moves away,
-    the lower bound does not have to shrink.
+    they fulfill some locality. When a centroid $\cj$
+    moves away from a point $\x$,
+    the lower bound $\lxcj$ does not have to shrink.
   
     We use the upper bound to localize the cluster. 
     Any point is at most $\ux$ from its closest centroid.
@@ -125,6 +129,8 @@ Waco, TX 76798-7356 \\
 
 \block{Lower bound update calculation}{
 If we fix $f(x) = \distxcj - \distxcjp = z$, we obtain a hyperbola. For any point on or above the hyperbola we can use $\deltaxcj = z$ as the update of the lower bound $\lxcj$.
+
+The optimal value of $z$ could be found if the hyperbola touches the sphere that contains the cluster. This would lead to too costly calculations. Therefore instead we let asymptote of the hyperbola touch the sphere and use a bit bigger value of $z$.
 
 \begin{lemma}
 Suppose that $\x \in \R^2$, $\ux \leq r \in \Rpz$ and $\ci = (c_{ix}, c_{iy})$,
@@ -149,12 +155,12 @@ is a valid update of the lower bound $\lxcj$.
 \column{0.25}
 \block{Avoiding $\Theta(n)$ work in the innermost loop}{
     In Hamerly's algorithm we need to know the distance to
-    the second closest neighbor in the innermost loop.
-    What if we knew what was the second closest centroid?
+    the second closest centroid in the innermost loop.
+    What if we know which centroid is the second closest?
     If we know the closest and the second closest centroid,
-    we do not need to calculate the distance to the other centroids.
+    we do not need to calculate the distances to the other centroids.
   \begin{definition}
-    The \emph{neighbor} of a centroid $\ci$ is any centroid $\cj$
+    A \emph{neighbor} of a centroid $\ci$ is any centroid $\cj$
     that is closest or second closest to any point assigned to $\ci$.
   \end{definition}
   \begin{theorem}
@@ -169,7 +175,7 @@ is a valid update of the lower bound $\lxcj$.
     \sci = \frac{1}{2} \min_{j \in \{1,2, \ldots, i-1, i+1, \ldots, k\}} \| \cj - \ci \|.
   \end{equation}
     If the condition \eqref{eq:neighborcond} is violated,
-    we know that for $\x$ assigned to $\ci$:
+    we know that for any $\x$ assigned to $\ci$:
     \begin{itemize}
       \item $\ci$ is closer to $\x$ than $\cj$ and
       \item the closest other centroid to $\ci$ is closer to $\x$ than $\cj$.
@@ -181,7 +187,7 @@ is a valid update of the lower bound $\lxcj$.
 \block{Experimental results}{
  Sources are available at \url{https://github.com/petrrysavy/baylorml} [branches \texttt{modified\_update} and \texttt{multithreaded}]. Implementation is based on code by G. Hamerly and J. Drake. We tested the algorithms on synthetic and real-world datasets.
  
- Changes require operations per iteration and pair of centroids. There is no additional work per point. Therefore the changes introduce a low risk of slowing down the algorithm while good chances of improving the runtime. Changes work better in lower dimension and when data are clustered. Algorithms becomes up to 8 times faster that the original versions.
+ Changes require operations per iteration and pair of centroids. There is no additional work per point. Therefore there is low risk of slowing down the algorithm while the runtime may improve several times. Changes work better in lower dimension and when data contain a natural clustering. Algorithms become up to 8 times faster that the original versions and 300 times faster than Lloyd's algorithm.
 }
 
 \block{References}{
