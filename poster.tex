@@ -93,7 +93,7 @@ Waco, TX 76798-7356 \\
 \block{Hamerly's algorithm \cite{hamerly}}{
   \begin{itemize}
     \item One \emph{upper bound} $u(\vec{x})$.
-    \item One \emph{lower bound} $l(\vec{x})$ that stands for a lower bound on the distance
+    \item One \emph{lower bound} $l(\vec{x})$ on the distance
       between the point $\vec{x}$ and its second closest centroid.
   \end{itemize}
   \begin{center}
@@ -114,7 +114,7 @@ Waco, TX 76798-7356 \\
     Any point is at most $\ux$ from its closest centroid.
     Therefore each point is at most
       \begin{equation*}
-         \mci = \max_{\vec{y} \mid \vec{c}(\vec{y}) = \ci} u(\vec{y}).
+         \mci = \max_{\vec{x} \mid \vec{c}(\vec{x}) = \ci} u(\vec{x}).
       \end{equation*}
       from its closest centroid $\ci$.
   
@@ -161,7 +161,7 @@ is a valid update of the lower bound $\lxcj$.
     we do not need to calculate the distances to the other centroids.
   \begin{definition}
     A \emph{neighbor} of a centroid $\ci$ is any centroid $\cj$
-    that is closest or second closest to any point assigned to $\ci$.
+    that is closest or second closest to any point assigned to~$\ci$.
   \end{definition}
   \begin{theorem}
     Any neighbor $\cj$ of a centroid $\ci$ must fulfill the condition
@@ -170,11 +170,9 @@ is a valid update of the lower bound $\lxcj$.
       \label{eq:neighborcond}
     \end{equation}
   \end{theorem}
-  $\sci$ is the distance from $\ci$ to closest other centroid, i.e.
-  \begin{equation}
-    \sci = \frac{1}{2} \min_{j \in \{1,2, \ldots, i-1, i+1, \ldots, k\}} \| \cj - \ci \|.
-  \end{equation}
-    If the condition \eqref{eq:neighborcond} is violated,
+  $\sci$ is the distance from $\ci$ to closest other centroid.
+  
+    If \eqref{eq:neighborcond} is violated,
     we know that for any $\x$ assigned to $\ci$:
     \begin{itemize}
       \item $\ci$ is closer to $\x$ than $\cj$ and
@@ -191,7 +189,7 @@ is a valid update of the lower bound $\lxcj$.
 }
 
 \block{References}{
-    \scriptsize
+    \footnotesize
 	\nocite{chapter, hamerly, elkan, lloyd}
     \bibliographystyle{plain}
     \bibliography{files/thesis}
