@@ -104,11 +104,14 @@ Waco, TX 76798-7356 \\
 \column{0.25}
 
 \block{Tighter update}{
-    We assume the worst case while we update the upper/lower bounds.
+    \cite{elkan, hamerly} assume the worst case while
+    they update the upper/lower bounds.
     Points in cluster are not everywhere in space, but
     they fulfill some locality. When a centroid $\cj$
-    moves away from a point $\x$,
-    the lower bound $\lxcj$ does not have to shrink.
+    moves away from a point $\x$, the lower bound $\lxcj$
+    does not have to shrink. If the lower bound decreases
+    slower, the distance should be recalculated less
+    often.
   
     We use the upper bound to localize the cluster. 
     Any point is at most $\ux$ from its closest centroid.
@@ -156,9 +159,8 @@ is a valid update of the lower bound $\lxcj$.
 \block{Avoiding $\Theta(n)$ work in the innermost loop}{
     In Hamerly's algorithm we need to know the distance to
     the second closest centroid in the innermost loop.
-    What if we know which centroid is the second closest?
-    If we know the closest and the second closest centroid,
-    we do not need to calculate the distances to the other centroids.
+    If we knew the closest and the second closest centroid,
+    we would not need to calculate the distances to the other centroids.
   \begin{definition}
     A \emph{neighbor} of a centroid $\ci$ is any centroid $\cj$
     that is closest or second closest to any point assigned to~$\ci$.
