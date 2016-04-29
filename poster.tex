@@ -26,49 +26,46 @@ Waco, TX 76798-7356 \\
 }
 
 \block{Abstract}{
-\textit{Most implementations of $k$-means use Lloyd's algorithm, which does many unnecessary distance calculations. Several accelerated algorithms produce exactly the same answer. They avoid redundant work using the triangle inequality paired with a set of bounds on point-centroid distances. Our proposals allow those algorithms to perform even better, giving up to eight times further speedup. Our methods give tighter lower bound updates and efficiently skip centroids that cannot possibly be close to a set of points.}
+\textit{Most implementations of $k$-means use Lloyd's algorithm, which does {\bf many unnecessary distance calculations}. Several accelerated algorithms produce exactly the same answer by using bounds on point-center distances which are efficiently updated with the triangle inequality.  In this work we propose {\bf tighter lower bound updates} and {\bf efficiently skip centroids} that cannot possibly be close to a set of points. In our experiments, these improvements {\bf accelerate fast algorithms up to eight times faster}.}
 }
 
 
-\block{$k$-means problem}{
-  Input
-  \begin{itemize}
-    \item A set of points $\left\{ \itemization{\vec{x}}{n} \right\}$.
-    \item Number of centroids $k$.
-  \end{itemize}
-  Goal is to find to find a set of $k$ points $\left\{ \itemization{\vec{c}}{k} \right\}$, named \emph{centroids},
-  that minimize the \emph{distortion function}
-  \begin{equation*}
-    J(\itemization{\vec{c}}{k}, \vec{c}) = \sumion \left\| \vec{x}_i - \vec{c}(\vec{x}_i) \right\|^2.
-    \label{eq:distortion}
-  \end{equation*}
+\block{$k$-means Clustering}{
+    \begin{itemize}
+    \item Inputs: $n$ points $\left\{ \itemization{\vec{x}}{n} \right\}$;
+    number of centroids $k$.
+    \item Goal: find a set of $k$ centroids $\left\{ \itemization{\vec{c}}{k}
+    \right\}$ to minimize the \emph{distortion function}
+      \begin{equation*}
+        J(\itemization{\vec{c}}{k}) = \sumion \min_{1 \le j \le k} \left\| \vec{x}_i - \vec{c}_j \right\|^2.
+        \label{eq:distortion}
+      \end{equation*}
+    \end{itemize}
   %(function $\vec{c}$ returns the assigned centroid to the given argument)
   \input{files/clusters}
 }
 
-\block{Lloyd's algorithm \cite{lloyd}}{
-  Iteratively repeats two steps:
+\block{Lloyd's Algorithm \cite{lloyd}}{
+  Repeat until convergence:
      \begin{enumerate}
-       \item Assign each point to its closest centroid
-       \item Move centroids to the cluster means
+       \item {\bf Assign} each point to its closest centroid
+       \item {\bf Move} centroids to the cluster means
      \end{enumerate}
 }
 
 
 \column{0.25}
 
-\block{Triangle-inequality-based $k$-means}{
-   Lloyd's algorithm does many redundant distance calculations.
-   If a centroid does not move or the movement is small, the
-   distances are recalculated. There are several algorithms that
-   target this inefficiency by maintaining a set of upper and lower bounds.
-   Those bounds are guaranteed by the triangle inequality.
-   Common property of those algorithms is that they produce
-   \emph{exactly} the same result as Lloyd's algorithm,
-   only \emph{faster}.
+\block{Triangle-Inequality-Based $k$-means}{
+   Lloyd's algorithm calculates all point-center distances, even when centers
+   move very little. Several algorithms avoid this redundant work by
+   maintaining distance bounds which can prove when cluster assignments could
+   not have changed.  The triangle inequality allows efficient and correct but
+   loose bound updates.  Such algorithms produce \emph{exactly} the same
+   results as Lloyd's algorithm, only \emph{faster}.
    
   \begin{theorem}[Triangle inequality] \label{thm:triange}
-    For any vectors $\vec{x}$ and $\vec{y}$ holds
+    For any vectors $\vec{x}$ and $\vec{y}$,
     \begin{equation*}
        \| \vec{x} + \vec{y} \| \leq \|\vec{x}\| + \|\vec{y}\|.
     \end{equation*}
@@ -80,22 +77,22 @@ Waco, TX 76798-7356 \\
  \end{center}
 }
 
-\block{Elkan's algorithm \cite{elkan}}{
+\block{Elkan's Algorithm \cite{elkan}}{
   \begin{itemize}
-    \item One \emph{upper bound} $\ux$ on the distance to the closest centroid.
-    \item $k$ \emph{lower bounds} $\lxcj$ on the distances between the
-      point $\x$ and each centroid.
+    \item One \emph{upper bound} $\ux$ -- distance to the assigned centroid.
+    \item $k$ \emph{lower bounds} $\lxcj$ -- distance to each centroid.
   \end{itemize}
   \begin{center}
     \input{img/elkanbounds.pgf}
   \end{center}
 }
 
-\block{Hamerly's algorithm \cite{hamerly}}{
+\block{Hamerly's Algorithm \cite{hamerly}}{
+  2 point-center distance bounds per point:
   \begin{itemize}
     \item One \emph{upper bound} $u(\vec{x})$.
-    \item One \emph{lower bound} $l(\vec{x})$ on the distance
-      between the point $\vec{x}$ and its second closest centroid.
+    \item One \emph{lower bound} $l(\vec{x})$ -- distance
+      to the second-closest centroid.
   \end{itemize}
   \begin{center}
     \input{img/hamerlybounds.pgf}
@@ -104,19 +101,15 @@ Waco, TX 76798-7356 \\
 
 \column{0.25}
 
-\block{Tighter update}{
-    \cite{elkan, hamerly} assume the worst case while
-    they update the upper/lower bounds.
-    Points in cluster are not everywhere in space, but
-    they fulfill some locality. When a centroid $\cj$
-    moves away from a point $\x$, the lower bound $\lxcj$
-    does not have to shrink. If the lower bound decreases
-    slower, the distance should be recalculated less
-    often.
+\block{Idea 1: Tighter Bound Updates}{
+    The triangle inequality \cite{elkan, hamerly} is a worst-case update for
+    the bounds. Points have locality, so when $\cj$ moves {\em away} from $\x$, the
+    lower bound $\lxcj$ need not shrink. If the lower bound decreases
+    slower, the bound is more useful.
   
     We use the upper bound to localize the cluster. 
-    Any point is at most $\ux$ from its closest centroid.
-    Therefore each point is at most
+    %Any point is at most $\ux$ from its closest centroid.
+    Each point is at most
       \begin{equation*}
          \mci = \max_{\vec{x} \mid \vec{c}(\vec{x}) = \ci} u(\vec{x}).
       \end{equation*}
@@ -131,7 +124,7 @@ Waco, TX 76798-7356 \\
       $\distxcj - \distxcjp = f(\x)$.
 }
 
-\block{Lower bound update calculation}{
+\block{Lower Bound Update Calculation}{
 If we fix $f(x) = \distxcj - \distxcjp = z$, we obtain a hyperbola. For any point on or above the hyperbola we can use $\deltaxcj = z$ as the update of the lower bound $\lxcj$.
 
 The optimal value of $z$ could be found if the hyperbola touches the sphere that contains the cluster. This would lead to too costly calculations. Therefore instead we let asymptote of the hyperbola touch the sphere and use a bit bigger value of $z$.
@@ -156,8 +149,11 @@ is a valid update of the lower bound $\lxcj$.
   \end{center}
 }
 
+
+% Hamerly left off editing around here Fri Apr 29 20:55:13 UTC 2016
+
 \column{0.25}
-\block{Avoiding $\Theta(n)$ work in the innermost loop}{
+\block{Idea 2: Avoid $\Theta(k)$ Work in the Innermost Loop}{
     In Hamerly's algorithm we need to know the distance to
     the second closest centroid in the innermost loop.
     If we knew the closest and the second closest centroid,
