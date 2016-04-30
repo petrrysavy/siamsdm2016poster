@@ -1,8 +1,34 @@
 \documentclass[25pt, a0paper, landscape, margin=0mm, innermargin=15mm, blockverticalspace=15mm, colspace=15mm, subcolspace=8mm]{tikzposter}
 
 \title{Geometric Methods of Accelerating Triangle-inequality-based $k$-means}
-\author{Petr Ry\v{s}av\'{y} and Greg Hamerly}
+\author{Petr Ry\v{s}av\'{y} and Greg Hamerly \\
+ {\large \href{mailto:petr_rysavy@alumni.baylor.edu}{\texttt{petr\_rysavy@alumni.baylor.edu}},
+ \href{mailto:hamerly@cs.baylor.edu}{\texttt{hamerly@cs.baylor.edu}}}
+}
 \institute{Baylor University, Waco, TX}
+\titlegraphic{\includegraphics{Baylor_University_mark.pdf}}
+
+
+
+% http://tex.stackexchange.com/questions/167521/tikz-poster-aligning-titlegraphic-to-the-right-of-the-title
+\makeatletter
+\renewcommand\TP@maketitle{%
+   \begin{minipage}{0.8\linewidth}
+        \centering
+        \color{titlefgcolor}
+        {\bfseries \Huge \sc \@title \par}
+        \vspace*{1em}
+        {\huge \@author \par}
+        \vspace*{1em}
+        {\LARGE \@institute}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}{0.2\linewidth}
+       \centering
+       \@titlegraphic
+    \end{minipage}
+}
+\makeatother
 
 \usetheme{Desert}
 \usecolorstyle[colorPalette=GreenGrayViolet,colorOne=green!30!black,colorTwo=white,colorThree=black]{Denmark}
@@ -16,14 +42,14 @@
 \begin{columns}
 \column{0.25}
 
-\block[titleoffsety=-100cm,bodyoffsety=-100cm]{}{
-Petr Ry\v{s}av\'{y} and Greg Hamerly \\
-Department of Computer Science\\
-Baylor University\\
-Waco, TX 76798-7356 \\
-\href{mailto:petr_rysavy@alumni.baylor.edu }{petr\_rysavy@alumni.baylor.edu } \\
-\href{mailto:greg_hamerly@baylor.edu}{greg\_hamerly@baylor.edu}
-}
+%\block[titleoffsety=-100cm,bodyoffsety=-100cm]{}{
+%Petr Ry\v{s}av\'{y} and Greg Hamerly \\
+%Department of Computer Science\\
+%Baylor University\\
+%Waco, TX 76798-7356 \\
+%\href{mailto:petr_rysavy@alumni.baylor.edu }{petr\_rysavy@alumni.baylor.edu } \\
+%\href{mailto:greg_hamerly@baylor.edu}{greg\_hamerly@baylor.edu}
+%}
 
 \block{Abstract}{
 \textit{Most implementations of $k$-means use Lloyd's algorithm, which does {\bf many unnecessary distance calculations}. Several accelerated algorithms produce exactly the same answer by using bounds on point-center distances which are efficiently updated with the triangle inequality.  In this work we propose {\bf tighter lower bound updates} and {\bf efficiently skip centroids} that cannot possibly be close to a set of points. In our experiments, these improvements {\bf accelerate fast algorithms up to eight times faster}.}
@@ -57,11 +83,11 @@ Waco, TX 76798-7356 \\
 \column{0.25}
 
 \block{Triangle-Inequality-Based $k$-means}{
-   Lloyd's algorithm calculates all point-center distances, even when centers
-   move very little. Several algorithms avoid this redundant work by
-   maintaining distance bounds which can prove when cluster assignments could
-   not have changed.  The triangle inequality allows efficient and correct but
-   loose bound updates.  Such algorithms produce \emph{exactly} the same
+   Lloyd's algorithm calculates all point-center distances, {\bf even when centers
+   move very little}. Several algorithms avoid this redundant work by
+   maintaining {\bf distance bounds which can prove when cluster assignments could
+   not have changed}.  The {\bf triangle inequality allows efficient and correct but
+   loose} bound updates.  Such algorithms produce \emph{exactly} the same
    results as Lloyd's algorithm, only \emph{faster}.
    
   \begin{theorem}[Triangle inequality] \label{thm:triange}
@@ -103,10 +129,9 @@ Waco, TX 76798-7356 \\
 
 \block{Idea 1: Tighter Bound Updates}{
     The triangle inequality \cite{elkan, hamerly} is a worst-case update for
-    the bounds. Points have locality, so when $\cj$ moves {\em away} from $\x$, the
+    the bounds. Points have locality, so e.g.\ when $\cj$ moves {\em away} from $\x$, the
     lower bound $\lxcj$ need not shrink. If the lower bound decreases
-    slower, the bound is more useful.
-  
+    more slowly, it is more useful.
     We use the upper bound to localize the cluster. 
     %Any point is at most $\ux$ from its closest centroid.
     Each point is at most
@@ -151,13 +176,13 @@ is a valid update of the lower bound $\lxcj$.
 
 
 \column{0.25}
-\block{Idea 2: Avoid $\Theta(k)$ Work in the Innermost Loop}{
+\block{Idea 2: Use Neighbors to Avoid $\Theta(k)$ Work in the Innermost Loop}{
     Hamerly's algorithm finds the distance to
     the second-closest centroid in its innermost loop.
     If we know which are the two closest centroids, no other 
     distances need to be calculated.
   \begin{definition}
-    Centroid $\cj$ is a \emph{neighbor} of $\ci$ if it is one of the two closest
+    Centroid $\cj$ is a {\bf neighbor} of $\ci$ if it is one of the two closest
     for any point assigned to~$\ci$.
   \end{definition}
   \begin{theorem}
@@ -175,8 +200,8 @@ is a valid update of the lower bound $\lxcj$.
       \item $\ci$ is closer to $\x$ than $\cj$ and
       \item the closest other centroid to $\ci$ is closer to $\x$ than $\cj$.
     \end{itemize}
-    Therefore we do not need to consider non-neighbor $\cj$ in the innermost
-    loop for \emph{all} points in the cluster assigned to $\ci$.
+    Therefore for \emph{all} points assigned to $\ci$, we do not need to
+    consider non-neighbor $\cj$ in the innermost loop.
 }
 
 \block{Experimental results}{
